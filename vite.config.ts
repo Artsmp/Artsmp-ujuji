@@ -28,10 +28,19 @@ export default defineConfig({
       '@': resolve('./src'),
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: '@import "@/style/main.scss";',
+  // css: {
+  //   preprocessorOptions: {
+  //     scss: {
+  //       additionalData: '@import "@/style/main.scss";',
+  //     },
+  //   },
+  // },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://api2.ujuji.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/\/api/, ''),
       },
     },
   },

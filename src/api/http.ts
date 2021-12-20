@@ -17,7 +17,7 @@ request.interceptors.request.use(
 
 request.interceptors.response.use((response) => {
   const { code, msg } = response.data || {};
-  if (code === HTTP_OK) {
+  if (code !== HTTP_OK) {
     return Promise.reject(msg);
   }
   if (code === NO_PERMISSION) {
@@ -29,7 +29,7 @@ request.interceptors.response.use((response) => {
 
 export interface ResType<T> {
   code: number;
-  data?: T;
+  data: T;
   msg: string;
   err?: string;
 }
@@ -48,12 +48,13 @@ const http: Http = {
       request
         .get(url, { params })
         .then((res) => {
-          nProgress.done();
           resolve(res.data);
         })
         .catch((err) => {
-          nProgress.done();
           reject(err.data);
+        })
+        .finally(() => {
+          nProgress.done();
         });
     });
   },
@@ -63,12 +64,13 @@ const http: Http = {
       request
         .post(url, data)
         .then((res) => {
-          nProgress.done();
           resolve(res.data);
         })
         .catch((err) => {
-          nProgress.done();
           reject(err.data);
+        })
+        .finally(() => {
+          nProgress.done();
         });
     });
   },
@@ -82,12 +84,13 @@ const http: Http = {
           },
         })
         .then((res) => {
-          nProgress.done();
           resolve(res.data);
         })
         .catch((err) => {
-          nProgress.done();
           reject(err.data);
+        })
+        .finally(() => {
+          nProgress.done();
         });
     });
   },

@@ -1,1 +1,13 @@
-$primary-color: #23aaf2;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+// 全局样式
+button,
+input {
+  outline: none;
+}
+
+html,
+body,
+#app {
+  @apply w-full h-full;
+}
