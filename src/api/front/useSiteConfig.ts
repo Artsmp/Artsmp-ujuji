@@ -3,16 +3,18 @@ import type { Ref } from 'vue';
 import { watch } from 'vue';
 import { ref } from 'vue';
 import http from '../http';
-import type { IBoxList, ISiteConfigData, ISite_config } from './types';
+import type { IBoxList, ISearch_config, ISiteConfigData, ISite_config } from './types';
 
 export const useSiteConfig = () => {
   const loading = ref(true);
   const siteConfigInfo = ref<Partial<ISite_config>>({});
+  const searchConfig = ref<ISearch_config[]>([]);
   http
     .get<ISiteConfigData>('/site_config/v1/ujuji')
     .then((res) => {
       if (res.code === HTTP_OK) {
         siteConfigInfo.value = res.data.site_config;
+        searchConfig.value = res.data.search_config;
       }
     })
     .finally(() => {
@@ -21,6 +23,7 @@ export const useSiteConfig = () => {
   return {
     loading,
     siteConfigInfo,
+    searchConfig,
   };
 };
 

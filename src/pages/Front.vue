@@ -1,35 +1,10 @@
 <template>
   <div class="front-wrapper">
     <!-- 头部导航 -->
-    <header class="header__nav flex items-center justify-between h-10 w-full px-4">
-      <div class="weather">[成都] 晴转多云 14℃</div>
-      <div class="options">
-        <ul class="flex items-center space-x-4">
-          <li class="flex items-center cursor-pointer">
-            <span class="w-4 mr-1 mt-1"><NewspaperOutline /></span>
-            <span>新闻</span>
-          </li>
-          <li class="flex items-center cursor-pointer">
-            <span class="w-4 mr-1 mt-1"><ChatboxEllipsesOutline /></span>
-            <span>留言</span>
-          </li>
-          <li class="flex items-center cursor-pointer">
-            <span class="w-4 mr-1 mt-1"><Aperture /></span>
-            <span>好站</span>
-          </li>
-          <li class="flex items-center cursor-pointer">
-            <span class="w-4 mr-1 mt-1"><CalendarNumberOutline /></span>
-            <span>最新</span>
-          </li>
-          <li class="flex items-center cursor-pointer">
-            <span class="w-4 mr-1 mt-1"><SettingsOutline /></span>
-            <span>设置</span>
-          </li>
-        </ul>
-      </div>
-    </header>
+    <FrontNav />
 
-    <HeaderSearch :site-config-info="siteConfigInfo" />
+    <!-- 搜索和标题 -->
+    <HeaderSearch :site-config-info="siteConfigInfo" :search-config="searchConfig" />
 
     <!-- 盒子列表 -->
     <Boxes :box-list="boxList" :loading="loading" />
@@ -41,23 +16,20 @@
 
     <!-- 背景图片 -->
     <div class="bg-wrapper"></div>
+
+    <!-- 回到顶部 -->
+    <n-back-top :right="50" />
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref, watch } from 'vue';
-  import {
-    NewspaperOutline,
-    ChatboxEllipsesOutline,
-    Aperture,
-    CalendarNumberOutline,
-    SettingsOutline,
-  } from '@vicons/ionicons5';
   import { useLinkList, useSiteConfig } from '@/api/front/useSiteConfig';
   import HeaderSearch from '@/components/front/HeaderSearch.vue';
   import Boxes from '../components/front/Boxes.vue';
+  import FrontNav from '@/components/front/FrontNav.vue';
 
-  const { siteConfigInfo } = useSiteConfig();
+  const { siteConfigInfo, searchConfig } = useSiteConfig();
   const { boxList, loading } = useLinkList(siteConfigInfo);
   const bgImg = ref('');
   watch(siteConfigInfo, (newVal) => {
@@ -66,6 +38,7 @@
 </script>
 
 <style lang="scss" scoped>
+  @import '../style/mixin';
   :global(.front-wrapper) {
     --site-name-color: v-bind('siteConfigInfo.site_name_color');
     --site-bg-color: v-bind('siteConfigInfo.background_color');
@@ -79,6 +52,8 @@
   }
   .front-wrapper {
     @apply w-full h-full text-sm;
+    @include hide-scroll;
+
     position: relative;
     color: var(--site-name-color);
     .bg-wrapper {

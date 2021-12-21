@@ -6,30 +6,92 @@
     </h1>
     <p class="header__desc">{{ siteConfigInfo.site_desc }}</p>
     <div class="search__cates">
-      <a class="cursor-pointer">常用</a>
-      <a class="cursor-pointer">网盘</a>
+      <a
+        v-for="item in searchConfig"
+        :key="item.id"
+        :class="[
+          'cursor-pointer',
+          item.id === currentShowCateId && 'text-yellow-500 font-semibold',
+        ]"
+        @click="onToggleCate(item.id)"
+      >
+        {{ item.name }}
+      </a>
     </div>
     <div class="search__sites">
-      <a class="cursor-pointer">百度</a>
-      <a class="cursor-pointer">开发</a>
-      <a class="cursor-pointer">必应</a>
+      <a
+        v-for="item in siteList"
+        :key="item.id"
+        :class="['cursor-pointer', currentShowSiteId === item.id && 'underline font-semibold']"
+        @click="onToggleSite(item.id)"
+      >
+        {{ item.name }}
+      </a>
     </div>
     <div class="input__wrapper">
-      <input type="text" class="input__inner" />
-      <SearchCircleOutline class="input__icon" />
+      <input
+        ref="searchRef"
+        v-model="query"
+        type="text"
+        class="input__inner"
+        :placeholder="currentSelectSite.placeholder"
+        @keydown.enter="onSearch"
+        @focus="onFocus"
+      />
+      <SearchCircleOutline class="input__icon cursor-pointer" @click="onSearch" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import type { ISite_config } from '@/api/front/types';
-  import { toRefs } from 'vue';
+  import type { ILink, ISearch_config, ISite_config } from '@/api/front/types';
   import { SearchCircleOutline } from '@vicons/ionicons5';
+  import { jumpUrl } from '@/utils/url';
+  import { ref, toRefs, watch } from 'vue';
 
   const props = defineProps<{
     siteConfigInfo: Partial<ISite_config>;
+    searchConfig: ISearch_config[];
   }>();
-  const { siteConfigInfo } = toRefs(props);
+  // 和搜索相关的逻辑
+  const { siteConfigInfo, searchConfig } = toRefs(props);
+  const siteList = ref<ILink[]>([]);
+  const currentShowCateId = ref(-1);
+  const currentShowSiteId = ref(-1);
+  const currentSelectSite = ref<Partial<ILink>>({});
+  watch(searchConfig, () => {
+    siteList.value = searchConfig.value[0].links;
+    currentShowCateId.value = searchConfig.value[0].id;
+    currentSelectSite.value = siteList.value[0];
+    currentShowSiteId.value = currentSelectSite.value.id as number;
+  });
+  const onToggleCate = (id: number) => {
+    const temps = searchConfig.value.find((item) => item.id === id);
+    if (temps) {
+      siteList.value = temps.links;
+      currentShowCateId.value = temps.id;
+      currentSelectSite.value = siteList.value[0];
+      currentShowSiteId.value = currentSelectSite.value.id as number;
+    }
+  };
+  const onToggleSite = (id: number) => {
+    const temps = siteList.value.find((item) => item.id === id);
+    if (temps) {
+      currentSelectSite.value = temps;
+      currentShowSiteId.value = currentSelectSite.value.id as number;
+    }
+  };
+
+  const query = ref('');
+  const searchRef = ref<HTMLInputElement | null>(null);
+  const onSearch = () => {
+    if (!query.value) return;
+    const url = currentSelectSite.value.link!.replace('[kw]', query.value);
+    jumpUrl(url);
+  };
+  const onFocus = () => {
+    searchRef.value!.select();
+  };
 </script>
 
 <style lang="scss" scoped>

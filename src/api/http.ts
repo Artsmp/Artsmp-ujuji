@@ -2,6 +2,9 @@ import { HTTP_OK, NO_PERMISSION } from '@/app/keys';
 import router from '@/router';
 import axios from 'axios';
 import nProgress from 'nprogress';
+nProgress.configure({
+  showSpinner: false,
+});
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
@@ -10,6 +13,7 @@ const request = axios.create({
 
 request.interceptors.request.use(
   (config) => {
+    nProgress.start();
     return config;
   },
   (error) => error
@@ -17,6 +21,7 @@ request.interceptors.request.use(
 
 request.interceptors.response.use((response) => {
   const { code, msg } = response.data || {};
+  nProgress.done();
   if (code !== HTTP_OK) {
     return Promise.reject(msg);
   }
@@ -44,7 +49,6 @@ export interface Http {
 const http: Http = {
   get(url, params) {
     return new Promise((resolve, reject) => {
-      nProgress.start();
       request
         .get(url, { params })
         .then((res) => {
@@ -52,15 +56,11 @@ const http: Http = {
         })
         .catch((err) => {
           reject(err.data);
-        })
-        .finally(() => {
-          nProgress.done();
         });
     });
   },
   post(url, data) {
     return new Promise((resolve, reject) => {
-      nProgress.start();
       request
         .post(url, data)
         .then((res) => {
@@ -68,15 +68,11 @@ const http: Http = {
         })
         .catch((err) => {
           reject(err.data);
-        })
-        .finally(() => {
-          nProgress.done();
         });
     });
   },
   upload(url, file) {
     return new Promise((resolve, reject) => {
-      nProgress.start();
       request
         .post(url, file, {
           headers: {
@@ -88,9 +84,6 @@ const http: Http = {
         })
         .catch((err) => {
           reject(err.data);
-        })
-        .finally(() => {
-          nProgress.done();
         });
     });
   },

@@ -10,7 +10,7 @@
               :href="link.link"
               target="_blank"
               class="link"
-              @mouseover="item.introduction = link.description"
+              @mouseenter="item.introduction = link.description"
             >
               {{ link.title }}
             </a>
@@ -23,26 +23,24 @@
 
 <script setup lang="ts">
   import type { IBoxList } from '@/api/front/types';
-  import { ref, toRefs } from 'vue';
+  import { toRefs } from 'vue';
 
   const props = withDefaults(
     defineProps<{
-      boxList: Partial<IBoxList>[] | undefined;
+      boxList: Partial<IBoxList>[];
       loading: boolean;
     }>(),
-    { boxList: undefined }
+    { boxList: () => [] }
   );
   const { boxList } = toRefs(props);
-
-  const siteDesc = ref('');
 </script>
 
 <style lang="scss" scoped>
   @import '../../style/mixin';
   .boxes {
-    @apply min-h-96 mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4;
+    @apply min-h-96 mt-6 grid grid-cols-1 gap-4 px-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4;
     .box {
-      @apply p-3 text-center rounded-md hover:bg-opacity-50 mb-4 not-last-of-type:mr-4 transition;
+      @apply p-3 text-center rounded-md hover:bg-opacity-50 transition;
       background-color: var(--box-background-color);
 
       &:hover {
