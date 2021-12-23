@@ -8,6 +8,7 @@ specifiers:
   '@vicons/ionicons5': ^0.11.0
   '@vitejs/plugin-vue': ^2.0.0
   axios: ^0.24.0
+  dayjs: ^1.10.7
   eslint: ^8.5.0
   eslint-config-prettier: ^8.3.0
   eslint-plugin-prettier: ^4.0.0
@@ -31,6 +32,7 @@ specifiers:
 
 dependencies:
   axios: 0.24.0
+  dayjs: 1.10.7
   nprogress: 0.2.0
   pinia: 2.0.6_typescript@4.5.4+vue@3.2.26
   sass: 1.45.0
@@ -767,6 +769,10 @@ packages:
     resolution: {integrity: sha512-sj+J0Mo2p2X1e306MHq282WS4/A8Pz/95GIFcsPNMPMZVI3EUrAdSv90al1k+p74WGLCruMXk23bfEDZa71X9Q==}
     engines: {node: '>=0.11'}
     dev: true
+
+  /dayjs/1.10.7:
+    resolution: {integrity: sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==}
+    dev: false
 
   /debug/4.3.3:
     resolution: {integrity: sha512-/zxw5+vh1Tfv+4Qn7a5nsbcJKPaSvCDhojn6FEl9vupwK2VCSDtEiEtqr8DFtzYFOdz63LBkxec7DYuc2jon6Q==}

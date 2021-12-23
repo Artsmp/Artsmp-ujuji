@@ -37,7 +37,10 @@
           </n-icon>
           <span>新闻</span>
         </li>
-        <li class="items-center space-x-1 cursor-pointer hover:text-yellow-500 hidden sm:flex">
+        <li
+          class="items-center space-x-1 cursor-pointer hover:text-yellow-500 hidden sm:flex"
+          @click="showLeaveMsg"
+        >
           <n-icon><ChatboxEllipsesOutline /></n-icon>
           <span>留言</span>
         </li>
@@ -56,6 +59,7 @@
       </ul>
     </div>
   </header>
+  <LeaveMsgDialog v-model:showModal="showModal" />
 </template>
 
 <script setup lang="ts">
@@ -70,6 +74,7 @@
   } from '@vicons/ionicons5';
   import city from '@/assets/data/city.json';
   import useWeatherStore from '@/store/module/weatherStore';
+  import LeaveMsgDialog from './nav/LeaveMsgDialog.vue';
 
   // 和天气相关的逻辑
   const store = useWeatherStore();
@@ -88,6 +93,12 @@
   const refreshWeather = (value: string) => {
     cityVal.value = value;
     store.refreshWeather(value);
+  };
+
+  // 留言列表
+  const showModal = ref(false);
+  const showLeaveMsg = () => {
+    showModal.value = true;
   };
 </script>
 

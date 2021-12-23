@@ -1,4 +1,5 @@
 import { HTTP_OK } from '@/app/keys';
+import useUserStore from '@/store/module/useUserStore';
 import type { Ref } from 'vue';
 import { watch } from 'vue';
 import { ref } from 'vue';
@@ -9,12 +10,14 @@ export const useSiteConfig = () => {
   const loading = ref(true);
   const siteConfigInfo = ref<Partial<ISite_config>>({});
   const searchConfig = ref<ISearch_config[]>([]);
+  const userStore = useUserStore();
   http
     .get<ISiteConfigData>('/site_config/v1/ujuji')
     .then((res) => {
       if (res.code === HTTP_OK) {
         siteConfigInfo.value = res.data.site_config;
         searchConfig.value = res.data.search_config;
+        userStore.changeUser(res.data.user_info);
       }
     })
     .finally(() => {
